@@ -1,2 +1,2 @@
-export * from './Chat/MessageInput';
-export * from './ChatBox/MemberList';
+export * from './Chat';
+export * from './ChatBox';

@@ -53,6 +53,26 @@
       "timestamp": 1620284667,
       "authorId": 2,
       "body": "Bonjour c'est le premier message de la seconde conversation"
+    },
+    {
+      "body": "test envoie de message",
+      "timestamp": 1620284667,
+      "conversationId": 1,
+      "authorId": 1,
+      "id": 5
+    },
+    {
+      "conversationId": 1,
+      "body": "Envoi nouveau message",
+      "authorId": 1,
+      "timestamp": 0,
+      "id": 6
+    },
+    {
+      "body": "ah boon ?",
+      "timestamp": 0,
+      "conversationId": 1,
+      "id": 7
     }
   ],
   "users": [

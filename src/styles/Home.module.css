@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  padding: 0 0.5rem;
+  /*padding: 0 0;*/
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -36,14 +36,14 @@
 .description a:visited,
 .card a,
 .card a:visited {
-  color:black;
+  color: black;
   text-decoration: underline;
 }
 
 .card:hover a,
 .card:focus a,
 .card:active a {
-  color:#ec6e24;
+  color: #ec6e24;
 }
 
 .code {
@@ -51,8 +51,8 @@
   border-radius: 5px;
   padding: 0.3rem;
   font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New,
+    monospace;
 }
 
 .grid {
@@ -65,7 +65,7 @@
 }
 
 .card {
-  margin: .5rem;
+  margin: 0.5rem;
   flex-basis: 45%;
   padding: 1.5rem;
   text-align: left;
@@ -94,6 +94,18 @@
   line-height: 1.5;
 }
 
+.header {
+  width: 100%;
+  height: 60px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  border-bottom: 2px solid #ec6e24;
+  padding: 1rem 2rem;
+}
+
 .footer {
   width: 100%;
   height: 50px;
@@ -107,5 +119,9 @@
   .grid {
     width: 100%;
     flex-direction: column;
+  }
+
+  .header {
+    justify-content: center;
   }
 }

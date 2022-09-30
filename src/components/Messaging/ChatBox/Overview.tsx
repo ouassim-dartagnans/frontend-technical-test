@@ -1,7 +1,22 @@
 import { Conversation } from '../../../types/conversation';
 import { User } from '../../../types/user';
 import { Message } from '../../../types/message';
-import { Box, Flex, List, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  Fade,
+  Flex,
+  Hide,
+  List,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react';
 import { Summary } from './Summary';
 import React, { useState } from 'react';
 import { ViewConversation } from '../Chat/ViewConversation';
@@ -41,10 +56,16 @@ export const Overview = ({
       align={'flex-start'}
       overflow={'clip'}
       grow={1}
+      h={'100%'}
+      p={[0, 5]}
       w={['100vw', '100vw', '95vw']}
-      mt={['2rem', '5rem']}
+      my={['2rem', '2rem']}
       gap={5}
-      boxShadow={'0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)'}
+      position={'relative'}
+      boxShadow={[
+        0,
+        '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+      ]}
     >
       <Tabs
         flexShrink={0}
@@ -87,15 +108,37 @@ export const Overview = ({
       <Box w={1} minH={'100%'} bgColor={'brand.primary'} my={5} color={'brand.primary'} alignSelf={'stretch'}>
         |
       </Box>
-      {!!selectedConversation ? (
-        <ViewConversation
-          conversation={selectedConversation}
-          participants={users.filter(({ id }) =>
-            [selectedConversation?.recipientId, selectedConversation?.senderId].includes(id)
-          )}
-        />
-      ) : (
-        <Box flexGrow={1} w={'100%'} h={'100%'} />
+      {!!selectedConversation && (
+        <>
+          <Hide breakpoint={'(max-width: 700px'}>
+            <Box flexGrow={1} w={'100%'} h={'100%'} alignSelf={'stretch'}>
+              <Fade key={selectedConversation.id} in={!!selectedConversation} delay={0.1}>
+                <ViewConversation
+                  conversation={selectedConversation}
+                  interlocutor={getConversationInterlocutor(selectedConversation)}
+                />
+              </Fade>
+            </Box>
+          </Hide>
+          <Hide breakpoint={'(min-width: 701px'}>
+            <Drawer
+              placement={'bottom'}
+              size={'full'}
+              onClose={() => setSelectedConversation(null)}
+              isOpen={!!selectedConversation}
+            >
+              <DrawerOverlay />
+              <DrawerContent>
+                <DrawerBody>
+                  <ViewConversation
+                    conversation={selectedConversation}
+                    interlocutor={getConversationInterlocutor(selectedConversation)}
+                  />
+                </DrawerBody>
+              </DrawerContent>
+            </Drawer>
+          </Hide>
+        </>
       )}
     </Flex>
   );

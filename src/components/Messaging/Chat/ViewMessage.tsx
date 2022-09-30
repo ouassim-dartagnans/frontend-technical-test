@@ -3,7 +3,7 @@ import { ListItem, Text, useColorModeValue } from '@chakra-ui/react';
 import { loggedUserId } from '../../../pages/_app';
 import { User } from '../../../types/user';
 
-export const ViewMessage = ({ message }: { message: Message; participants: Array<User> }) => {
+export const ViewMessage = ({ message }: { message: Message; interlocutor: Omit<User, 'token'> }) => {
   const loggedUser = loggedUserId;
   const color = useColorModeValue('white.600', 'gray.800');
 

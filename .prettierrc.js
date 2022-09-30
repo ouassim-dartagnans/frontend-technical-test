@@ -5,4 +5,6 @@ module.exports = {
   printWidth: 120,
   proseWrap: 'always',
   tabWidth: 2,
+  importOrder: ['^react', '^next', '^(@chakra-ui|@emotion)', 'utils|hooks|services', 'types', '^./|^../'],
+  importOrderSeparation: true,
 };

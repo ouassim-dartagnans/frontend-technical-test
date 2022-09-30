@@ -22,6 +22,7 @@ import { Message } from '../../../types/message';
 import { User } from '../../../types/user';
 
 import { ViewConversation } from '../Chat/ViewConversation';
+import { FriendsList } from './FriendsList';
 import { Summary } from './Summary';
 
 interface Props {
@@ -30,7 +31,7 @@ interface Props {
   conversations: Conversation[];
   messages: Map<Conversation['id'], Message[]>;
 }
-// sort order conv ? by last message ?
+// TODO sort order conv ? by last message ?
 
 export const Overview = ({
   user,
@@ -52,6 +53,10 @@ export const Overview = ({
 
   function onSelectConversation(conv: Conversation | null) {
     setSelectedConversation(conv);
+  }
+
+  function openConversationWithUser(userId: User['id']) {
+    console.log("create conv if it' not created already ");
   }
 
   return (
@@ -98,13 +103,10 @@ export const Overview = ({
             </List>
           </TabPanel>
           <TabPanel>
-            <Flex direction={'column'}>
-              {users
-                .filter(({ id }) => id !== user.id)
-                .map((current) => (
-                  <li key={`user_${current.id}`}>{current.nickname}</li>
-                ))}
-            </Flex>
+            <FriendsList
+              users={users.filter((usr) => usr.id !== user.id)}
+              openConversationWithUser={openConversationWithUser}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>

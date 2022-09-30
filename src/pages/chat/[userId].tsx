@@ -25,29 +25,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     { staleTime: 50000 }
   );
 
-  console.log('query ', context.query.userId);
-  console.log('queryClient ', { queryClient: queryClient.getQueryData(['users', context.query.userId]) });
-
   return { props: { dehydratedState: dehydrate(queryClient) } };
 };
 
 const ConversationsListPage: FC = ({ test: string }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { userId } = router.query;
-  const { data: user } = useFetchUserByUserId(userId as string);
+  const { data: user } = useFetchUserByUserId(userId);
   const { data: users } = useFetchUsers();
-  const { data: conversations } = useFetchConversationsByUserId(userId as string);
+  const { data: conversations } = useFetchConversationsByUserId(userId);
   const { data: messages } = useFetchMessagesByConversationId('1');
-  console.log({ user, users, conversations, messages, env: config.NEXT_PUBLIC_API_BASE_URL });
   const [newMessage, setNewMessage] = useState('');
   return (
-    <MessageInput
-      value={newMessage}
-      onChange={setNewMessage}
-      onSubmit={async () =>
-        await axios.post(`http://localhost:3005/messages/`, { body: newMessage, timestamp: 0, conversationId: 1 })
-      }
-    />
+    <></>
+    // <MessageInput
+    //   value={newMessage}
+    //   onChange={setNewMessage}
+    //   onSubmit={async () =>
+    //     await axios.post(`http://localhost:3005/messages/`, { body: newMessage, timestamp: 0, conversationId: 1 })
+    //   }
+    // />
   );
 };
 

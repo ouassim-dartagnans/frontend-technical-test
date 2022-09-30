@@ -39,7 +39,7 @@ export const Overview = ({
 
   return (
     <Flex align={'flex-start'} overflow={'clip'} grow={1} w={['100vw', '100vw', '95vw']} mt={['2rem', '5rem']}>
-      <Tabs isFitted={true} colorScheme={'brand'} variant="line" h={'100%'} w={['100%', '100%', 'min(40%, 600px)']}>
+      <Tabs isFitted={true} colorScheme={'orange'} variant="line" h={'100%'} w={['100%', '100%', 'min(40%, 600px)']}>
         <TabList>
           <Tab>Conversations</Tab>
           <Tab>Friend List</Tab>

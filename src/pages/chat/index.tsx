@@ -51,7 +51,6 @@ const ChatPage: FC = () => {
     (map, query, currentIndex) => map.set(conversations[currentIndex].id, query.data),
     new Map<Conversation['id'], Array<Message>>()
   );
-  console.log('client side data', { user, conversations, messages });
   return <Overview conversations={conversations} messages={messages} users={users} user={user} />;
 };
 

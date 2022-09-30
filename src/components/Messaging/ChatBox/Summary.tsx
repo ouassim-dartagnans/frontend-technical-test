@@ -34,7 +34,6 @@ export const Summary = ({
         bgColor={isSelected && 'brand.background'}
         transition={'background-color 0.40s ease'}
         onClick={() => {
-          console.log('tick');
           onSelectConversation(conversation);
         }}
       >

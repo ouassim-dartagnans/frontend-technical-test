@@ -35,7 +35,7 @@ export const MessageInput = ({ conversation }: { conversation: Conversation }) =
 
   return (
     <form onSubmit={handleSubmit}>
-      <FormControl isInvalid={createMessage?.isError}>
+      <FormControl isInvalid={createMessage?.isError} >
         <InputGroup>
           <Input type="text" value={newMessage} placeholder={'Send Message'} onChange={handleInputChange} />
           <Button

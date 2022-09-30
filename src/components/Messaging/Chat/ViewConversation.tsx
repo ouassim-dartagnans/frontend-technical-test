@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { CloseIcon } from '@chakra-ui/icons';
 import { Avatar, Box, Center, Flex, Hide, IconButton, List, Text } from '@chakra-ui/react';
@@ -17,6 +17,12 @@ interface Props {
 
 export const ViewConversation = ({ conversation, interlocutor, handleClose }: Props) => {
   const { data: messages } = useFetchMessagesByConversationId(conversation.id);
+
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   return (
     <Flex
       direction={'column'}
@@ -29,7 +35,7 @@ export const ViewConversation = ({ conversation, interlocutor, handleClose }: Pr
       position={'relative'}
     >
       <Flex direction={'column'} w={'100%'} flexGrow={1} gap={10} position={'relative'}>
-        <Center borderBottom={'2px solid grey'} p={5} gap={3} position={'sticky'}>
+        <Center borderBottom={'2px solid grey'} p={5} gap={3} position={'sticky'} top={0} zIndex={5} bgColor={'white'}>
           <Avatar name={interlocutor.nickname} size={'md'} />
           <Text fontSize={'1.2rem'}>{interlocutor.nickname}</Text>
 
@@ -51,9 +57,12 @@ export const ViewConversation = ({ conversation, interlocutor, handleClose }: Pr
             .map((message) => (
               <ViewMessage key={`message_${message.id}`} message={message} interlocutor={interlocutor} />
             ))}
+          <div ref={ref} />
         </List>
       </Flex>
-      <MessageInput conversation={conversation} />
+      <Box position={'sticky'} bottom={0} bgColor={'white'}>
+        <MessageInput key={`${messages.length}`} conversation={conversation} />
+      </Box>
     </Flex>
   );
 };

@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
@@ -55,7 +56,15 @@ const ChatPage: FC = () => {
     (map, query, currentIndex) => map.set(conversations[currentIndex].id, query.data),
     new Map<Conversation['id'], Array<Message>>()
   );
-  return <Overview conversations={conversations} messages={messages} users={users} user={user} />;
+  return (
+    <>
+      <Head>
+        <title>Demo Chatbox - Leboncoin</title>
+        <meta name="description" content="Chat fonctionnel, chat qui ira loin"></meta>
+      </Head>
+      <Overview conversations={conversations} messages={messages} users={users} user={user} />
+    </>
+  );
 };
 
 export default ChatPage;

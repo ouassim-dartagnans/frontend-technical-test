@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from '../components';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from '../theme';
 
 // Default way to get a logged user
 export const loggedUserId = getLoggedUserId();
@@ -16,9 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       {/*// @ts-ignore*/}
       <Hydrate state={pageProps.dehydratedState}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ChakraProvider theme={theme}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ChakraProvider>
       </Hydrate>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

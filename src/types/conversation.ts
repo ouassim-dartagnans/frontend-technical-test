@@ -1,7 +1,9 @@
+import { NumberAsString } from './common';
+
 export interface Conversation {
-  id: number
-  recipientId: number
-  recipientNickname: string
-  senderId: number
-  senderNickname: string
+  id: NumberAsString;
+  recipientId: NumberAsString;
+  recipientNickname: string;
+  senderId: NumberAsString;
+  senderNickname: string;
 }

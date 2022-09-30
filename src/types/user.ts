@@ -1,5 +1,7 @@
+import { NumberAsString } from './common';
+
 export interface User {
-  id: number
-  nickname: string
-  token: string
+  id: NumberAsString;
+  nickname: string;
+  token: string;
 }

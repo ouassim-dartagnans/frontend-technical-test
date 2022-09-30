@@ -1,15 +1,17 @@
 import { createQueryKeyStore, inferQueryKeyStore } from '@lukemorales/query-key-factory';
+import { Conversation } from '../types/conversation';
+import { User } from '../types/user';
 
 export const queryKeys = createQueryKeyStore({
   users: {
-    userId: (userId: string) => userId,
+    userId: (userId: User['id']) => userId,
   },
   messages: {
-    conversationId: (conversationId: string) => conversationId,
+    conversationId: (conversationId: Conversation['id']) => conversationId,
   },
   conversations: {
-    conversationId: (conversationId: string) => conversationId,
-    userId: (userId: string) => userId,
+    conversationId: (conversationId: Conversation['id']) => conversationId,
+    userId: (userId: User['id']) => userId,
   },
 });
 

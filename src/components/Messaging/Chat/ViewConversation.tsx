@@ -3,11 +3,9 @@ import React from 'react';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Avatar, Box, Center, Flex, Hide, IconButton, List, Text } from '@chakra-ui/react';
 
-import { useFetchMessagesByConversationId } from '../../../api/hooks/fetchers';
+import { Conversation, User } from '../../../types';
 
-import { Conversation } from '../../../types/conversation';
-import { User } from '../../../types/user';
-
+import { useFetchMessagesByConversationId } from '../../../api';
 import { MessageInput } from './MessageInput';
 import { ViewMessage } from './ViewMessage';
 
@@ -20,9 +18,18 @@ interface Props {
 export const ViewConversation = ({ conversation, interlocutor, handleClose }: Props) => {
   const { data: messages } = useFetchMessagesByConversationId(conversation.id);
   return (
-    <Flex direction={'column'} w={'100%'} flexGrow={1} mt={'auto'}>
-      <Flex direction={'column'} w={'100%'} flexGrow={1} gap={10}>
-        <Center borderBottom={'2px solid grey'} p={5} gap={3}>
+    <Flex
+      direction={'column'}
+      w={'100%'}
+      flexGrow={1}
+      mt={'auto'}
+      overflow={'scroll'}
+      maxH={'80vh'}
+      px={5}
+      position={'relative'}
+    >
+      <Flex direction={'column'} w={'100%'} flexGrow={1} gap={10} position={'relative'}>
+        <Center borderBottom={'2px solid grey'} p={5} gap={3} position={'sticky'}>
           <Avatar name={interlocutor.nickname} size={'md'} />
           <Text fontSize={'1.2rem'}>{interlocutor.nickname}</Text>
 

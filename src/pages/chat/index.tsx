@@ -1,20 +1,24 @@
 import type { FC } from 'react';
-import { GetServerSideProps } from 'next';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
+
 import axios from 'axios';
-import { queryKeys } from '../../api/keys';
-import { config } from '../../utils/config';
-import { Overview } from '../../components';
-import { Conversation } from '../../types/conversation';
+import { GetServerSideProps } from 'next';
+
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+
 import {
-  useFetchUsers,
-  useFetchUserByUserId,
   useFetchConversationsByUserId,
-  useFetchMessagesByConversationId,
   useFetchMessagesByConversationsIds,
-} from '../../api/hooks/fetchers';
-import { loggedUserId } from '../_app';
+  useFetchUserByUserId,
+  useFetchUsers,
+} from '../../api/hooks/fetchs';
+import { config } from '../../utils/config';
+
+import { Conversation } from '../../types/conversation';
 import { Message } from '../../types/message';
+
+import { queryKeys } from '../../api/keys';
+import { Overview } from '../../components';
+import { loggedUserId } from '../_app';
 
 const fetchConversationsByUserId = async (userId: string) => {
   const { data } = await axios.get(`http://localhost:3005/conversations/${userId}`);
@@ -24,7 +28,7 @@ const fetchConversationsByUserId = async (userId: string) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(
-    queryKeys.users.userId('1'),
+    queryKeys.users.userId(1),
     async () => {
       const { data } = await axios.get(`${config.NEXT_PUBLIC_API_BASE_URL}/user/${'1'}`);
       return data[0];
@@ -32,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     { staleTime: 5000 }
   );
   const conversations = await fetchConversationsByUserId('1');
-  queryClient.setQueryData(queryKeys.conversations.userId('1'), conversations);
+  queryClient.setQueryData(queryKeys.conversations.userId(1), conversations);
   for (let conversation of conversations) {
     const conversationId = conversation.id;
     await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversationId), async () => {

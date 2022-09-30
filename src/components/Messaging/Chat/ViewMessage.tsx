@@ -1,55 +1,41 @@
-import { log } from 'console';
-
 import { ListItem, Text, useColorModeValue } from '@chakra-ui/react';
 
-import { Message } from '../../../types/message';
-import { User } from '../../../types/user';
+import { Message, User } from '../../../types';
 
 import { loggedUserId } from '../../../pages/_app';
 
 export const ViewMessage = ({ message }: { message: Message; interlocutor: Omit<User, 'token'> }) => {
   const loggedUser = loggedUserId;
   const color = useColorModeValue('white.600', 'gray.800');
-  {
-    console.log({ message: message, loggedUserId, test: message.authorId === loggedUser });
-  }
+
+  const props =
+    message.authorId === loggedUser
+      ? {
+          ml: 'auto',
+          borderColor: 'brand.600',
+          bgColor: 'rgb(254,119,38)',
+        }
+      : {
+          mr: 'auto',
+          bgColor: 'gray.200',
+          borderColor: 'dark.600',
+        };
+
   return (
     <ListItem key={`message_${message.id}`}>
-      {message.authorId === loggedUser ? (
-        <Text
-          ml={'auto'}
-          mb={5}
-          p={'12px'}
-          color={color}
-          backgroundColor={'rgb(254,119,38)'}
-          w={'fit-content'}
-          h={'auto'}
-          textAlign={'left'}
-          borderRadius={'10px'}
-          border={'1px solid'}
-          borderColor={'brand.600'}
-          fontSize={'1.1rem'}
-        >
-          {message.body}
-        </Text>
-      ) : (
-        <Text
-          color={color}
-          mr={'auto'}
-          mb={5}
-          p={'10px'}
-          bgColor={'gray.200'}
-          w={'fit-content'}
-          h={'auto'}
-          textAlign={'left'}
-          borderRadius={'10px'}
-          border={'1px solid'}
-          borderColor={'dark.600'}
-          fontSize={'1.1rem'}
-        >
-          {message.body}
-        </Text>
-      )}
+      <Text
+        {...props}
+        mb={5}
+        p={'12px'}
+        h={'auto'}
+        color={color}
+        w={'fit-content'}
+        borderRadius={'10px'}
+        fontSize={'1.05rem'}
+        border={'1px solid'}
+      >
+        {message.body}
+      </Text>
     </ListItem>
   );
 };

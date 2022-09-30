@@ -1,1 +1,1 @@
-export type NumberAsString = `${number}`;
+export type NumberAsString = number;

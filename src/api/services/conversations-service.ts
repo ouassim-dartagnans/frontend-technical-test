@@ -1,21 +1,26 @@
 import axios from 'axios';
 
-import { Conversation } from '../../types/conversation';
-import { Message } from '../../types/message';
-import { User } from '../../types/user';
+import { config } from '../../utils/config';
 
-export const createMessageForConversation = async ({
-  body,
-  authorId,
+import { Conversation, User } from '../../types';
+
+const apiRoute = `${config.NEXT_PUBLIC_API_BASE_URL}`;
+
+export const fetchConversationByUserId = async (userId: User['id']) => {
+  const { data } = await axios.get(`${apiRoute}/conversations/${userId}`);
+  return data as Conversation[];
+};
+
+export const deleteConversationByConversationId = async (conversationId: Conversation['id']) => {
+  const { data } = await axios.delete(`${apiRoute}/conversation/${conversationId}`);
+};
+
+export const createConversationByUserId = async ({
+  recipientId,
   conversationId,
 }: {
-  authorId: User['id'];
-  body: Message['body'];
+  recipientId: User['id'];
   conversationId: Conversation['id'];
-}) =>
-  await axios.post(`http://localhost:3005/messages/`, {
-    body,
-    authorId,
-    conversationId,
-    timestamp: Math.floor(Date.now() / 1000),
-  });
+}) => {
+  await axios.post(`${apiRoute}/conversations/${conversationId}`, { recipientId });
+};

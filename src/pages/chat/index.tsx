@@ -1,16 +1,17 @@
 import type { FC } from 'react';
 import { GetServerSideProps } from 'next';
-import { Overview } from '../../components';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { queryKeys } from '../../api/keys';
 import { config } from '../../utils/config';
+import { Overview } from '../../components';
 import { Conversation } from '../../types/conversation';
 import {
+  useFetchUsers,
+  useFetchUserByUserId,
   useFetchConversationsByUserId,
   useFetchMessagesByConversationId,
   useFetchMessagesByConversationsIds,
-  useFetchUserByUserId,
 } from '../../api/hooks/fetchers';
 import { loggedUserId } from '../_app';
 import { Message } from '../../types/message';
@@ -44,13 +45,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const ChatPage: FC = () => {
   const { data: user } = useFetchUserByUserId(loggedUserId);
+  const { data: users } = useFetchUsers();
   const { data: conversations } = useFetchConversationsByUserId(loggedUserId);
   const messages = useFetchMessagesByConversationsIds(conversations?.map(({ id }) => id)).reduce(
     (map, query, currentIndex) => map.set(conversations[currentIndex].id, query.data),
     new Map<Conversation['id'], Array<Message>>()
   );
   console.log('client side data', { user, conversations, messages });
-  return <Overview conversations={conversations} user={user} messages={messages} />;
+  return <Overview conversations={conversations} messages={messages} users={users} user={user} />;
 };
 
 export default ChatPage;

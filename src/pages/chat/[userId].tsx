@@ -16,7 +16,6 @@ import { config } from '../../utils/config';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
-  console.log(process.env);
   await queryClient.prefetchQuery(
     ['users', context.query.userId],
     async () => {

@@ -9,10 +9,10 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const year = new Date().getFullYear();
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Flex direction={'column'} minH={'100vh'} justify={'center'}>
+    <Flex direction={'column'} minW={'100vw'} minH={'100vh'} justify={'center'}>
       <Flex
-        p={5}
-        h={20}
+        p={[5, '1.8rem 5%']}
+        h={[20, 'fit-content']}
         w={'100%'}
         borderTop={'1px solid #eaeaea'}
         borderBottom={'3px solid'}

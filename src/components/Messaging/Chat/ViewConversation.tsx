@@ -1,17 +1,23 @@
+import React from 'react';
+
+import { CloseIcon } from '@chakra-ui/icons';
+import { Avatar, Box, Center, Flex, Hide, IconButton, List, Text } from '@chakra-ui/react';
+
+import { useFetchMessagesByConversationId } from '../../../api/hooks/fetchers';
+
 import { Conversation } from '../../../types/conversation';
 import { User } from '../../../types/user';
-import { useFetchMessagesByConversationId } from '../../../api/hooks/fetchers';
-import { Avatar, Center, Flex, List, Text } from '@chakra-ui/react';
+
 import { MessageInput } from './MessageInput';
 import { ViewMessage } from './ViewMessage';
-import React from 'react';
 
 interface Props {
   conversation: Conversation;
   interlocutor: Omit<User, 'token'>;
+  handleClose?: () => void;
 }
 
-export const ViewConversation = ({ conversation, interlocutor }: Props) => {
+export const ViewConversation = ({ conversation, interlocutor, handleClose }: Props) => {
   const { data: messages } = useFetchMessagesByConversationId(conversation.id);
   return (
     <Flex direction={'column'} w={'100%'} flexGrow={1} mt={'auto'}>
@@ -19,6 +25,18 @@ export const ViewConversation = ({ conversation, interlocutor }: Props) => {
         <Center borderBottom={'2px solid grey'} p={5} gap={3}>
           <Avatar name={interlocutor.nickname} size={'md'} />
           <Text fontSize={'1.2rem'}>{interlocutor.nickname}</Text>
+
+          <Hide breakpoint={'(min-width: 701px'}>
+            <Box ml={'auto'}>
+              <IconButton
+                icon={<CloseIcon />}
+                onClick={handleClose}
+                colorScheme="orange"
+                aria-label="Close Dialog"
+                variant={'outline'}
+              />
+            </Box>
+          </Hide>
         </Center>
         <List>
           {messages

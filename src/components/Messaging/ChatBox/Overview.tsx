@@ -1,6 +1,5 @@
-import { Conversation } from '../../../types/conversation';
-import { User } from '../../../types/user';
-import { Message } from '../../../types/message';
+import React, { useState } from 'react';
+
 import {
   Box,
   Drawer,
@@ -17,9 +16,13 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
-import { Summary } from './Summary';
-import React, { useState } from 'react';
+
+import { Conversation } from '../../../types/conversation';
+import { Message } from '../../../types/message';
+import { User } from '../../../types/user';
+
 import { ViewConversation } from '../Chat/ViewConversation';
+import { Summary } from './Summary';
 
 interface Props {
   user: User;
@@ -115,6 +118,7 @@ export const Overview = ({
               <Fade key={selectedConversation.id} in={!!selectedConversation} delay={0.1}>
                 <ViewConversation
                   conversation={selectedConversation}
+                  handleClose={() => setSelectedConversation(null)}
                   interlocutor={getConversationInterlocutor(selectedConversation)}
                 />
               </Fade>
@@ -132,6 +136,7 @@ export const Overview = ({
                 <DrawerBody>
                   <ViewConversation
                     conversation={selectedConversation}
+                    handleClose={() => setSelectedConversation(null)}
                     interlocutor={getConversationInterlocutor(selectedConversation)}
                   />
                 </DrawerBody>

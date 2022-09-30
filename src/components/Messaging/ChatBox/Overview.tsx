@@ -1,10 +1,9 @@
 import { Conversation } from '../../../types/conversation';
 import { User } from '../../../types/user';
 import { Message } from '../../../types/message';
-import { Box, Divider, Flex, List, ListItem, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Flex, List, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { Summary } from './Summary';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { ViewConversation } from '../Chat/ViewConversation';
 
 interface Props {
@@ -13,7 +12,7 @@ interface Props {
   conversations: Conversation[];
   messages: Map<Conversation['id'], Message[]>;
 }
-// sort order ? by last message ?
+// sort order conv ? by last message ?
 
 export const Overview = ({
   user,
@@ -38,8 +37,23 @@ export const Overview = ({
   }
 
   return (
-    <Flex align={'flex-start'} overflow={'clip'} grow={1} w={['100vw', '100vw', '95vw']} mt={['2rem', '5rem']}>
-      <Tabs isFitted={true} colorScheme={'orange'} variant="line" h={'100%'} w={['100%', '100%', 'min(40%, 600px)']}>
+    <Flex
+      align={'flex-start'}
+      overflow={'clip'}
+      grow={1}
+      w={['100vw', '100vw', '95vw']}
+      mt={['2rem', '5rem']}
+      gap={5}
+      boxShadow={'0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)'}
+    >
+      <Tabs
+        flexShrink={0}
+        isFitted={true}
+        colorScheme={'orange'}
+        variant="line"
+        h={'100%'}
+        w={['100%', '100%', 'min(40%, 600px)']}
+      >
         <TabList>
           <Tab>Conversations</Tab>
           <Tab>Friend List</Tab>
@@ -70,17 +84,19 @@ export const Overview = ({
           </TabPanel>
         </TabPanels>
       </Tabs>
-      {selectedConversation && (
+      <Box w={1} minH={'100%'} bgColor={'brand.primary'} my={5} color={'brand.primary'} alignSelf={'stretch'}>
+        |
+      </Box>
+      {!!selectedConversation ? (
         <ViewConversation
           conversation={selectedConversation}
           participants={users.filter(({ id }) =>
             [selectedConversation?.recipientId, selectedConversation?.senderId].includes(id)
           )}
         />
+      ) : (
+        <Box flexGrow={1} w={'100%'} h={'100%'} />
       )}
     </Flex>
   );
 };
-{
-  /*<ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>*/
-}

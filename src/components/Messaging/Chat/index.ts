@@ -1,3 +1,3 @@
-export * from './Message';
 export * from './MessageInput';
 export * from './ViewConversation';
+export * from './ViewMessage';

@@ -43,7 +43,9 @@ export const Summary = ({
             <Flex>
               <Text fontWeight={500}>{nickname}</Text>
               <Spacer />
-              <Text>{formattedTimestamp}</Text>
+              <Text as={'time'} dateTime={formattedTimestamp.toString()}>
+                {formattedTimestamp}
+              </Text>
             </Flex>
             <Text marginY={3} w={'80%'} noOfLines={1} h={'1.3rem'}>
               {!!lastMessage && lastMessage.body}

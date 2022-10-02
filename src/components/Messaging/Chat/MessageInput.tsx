@@ -16,13 +16,14 @@ export const MessageInput = ({ conversation }: { conversation: Conversation }) =
   const queryClient = useQueryClient();
   const [newMessage, setNewMessage] = useState('');
 
-  const createMessage = useGenericMutation(
-    queryKeys.messages.conversationId(conversation.id),
-    () => createMessageForConversation({ body: newMessage, conversationId: conversation.id, authorId: loggedUserId }),
-    (data) => {
+  const createMessage = useGenericMutation({
+    key: queryKeys.messages.conversationId(conversation.id),
+    mutationFn: () =>
+      createMessageForConversation({ body: newMessage, conversationId: conversation.id, authorId: loggedUserId }),
+    onSuccess: (data) => {
       setNewMessage('');
-    }
-  );
+    },
+  });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ export const MessageInput = ({ conversation }: { conversation: Conversation }) =
 
   return (
     <form onSubmit={handleSubmit}>
-      <FormControl isInvalid={createMessage?.isError} >
+      <FormControl isInvalid={createMessage?.isError}>
         <InputGroup>
           <Input type="text" value={newMessage} placeholder={'Send Message'} onChange={handleInputChange} />
           <Button

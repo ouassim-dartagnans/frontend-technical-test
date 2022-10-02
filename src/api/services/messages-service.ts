@@ -28,5 +28,5 @@ export const createMessageForConversation = async ({
   });
 
 export const deleteMessageByMessageId = async (messageId: Message['id']) => {
-  await axios.get(`${apiRoute}/message/${messageId}`);
+  await axios.delete(`${apiRoute}/message/${messageId}`);
 };

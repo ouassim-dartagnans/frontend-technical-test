@@ -1,16 +1,16 @@
 import type { FC } from 'react';
 
-import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
-import { config } from '../../utils/config';
-
 import { Conversation, Message } from '../../types';
 
 import {
+  fetchConversationsByUserId,
+  fetchMessagesByConversationId,
+  fetchUserByUserId,
   queryKeys,
   useFetchConversationsByUserId,
   useFetchCurrentLoggedUser,
@@ -20,29 +20,16 @@ import {
 import { Overview } from '../../components';
 import { loggedUserId } from '../_app';
 
-const fetchConversationsByUserId = async (userId: string) => {
-  const { data } = await axios.get(`http://localhost:3005/conversations/${userId}`);
-  return data as Conversation[];
-};
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(
-    queryKeys.users.userId(1),
-    async () => {
-      const { data } = await axios.get(`${config.NEXT_PUBLIC_API_BASE_URL}/user/${'1'}`);
-      return data[0];
-    },
-    { staleTime: 5000 }
-  );
-  const conversations = await fetchConversationsByUserId('1');
+  await queryClient.prefetchQuery(queryKeys.users.userId(1), () => fetchUserByUserId(1), { staleTime: 5000 });
+  const conversations = await fetchConversationsByUserId(1);
   queryClient.setQueryData(queryKeys.conversations.userId(1), conversations);
   for (let conversation of conversations) {
     const conversationId = conversation.id;
-    await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversationId), async () => {
-      const { data } = await axios.get(`http://localhost:3005/messages/${conversationId}`);
-      return data;
-    });
+    await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversationId), () =>
+      fetchMessagesByConversationId(conversationId)
+    );
   }
   return { props: { dehydratedState: dehydrate(queryClient) } };
 };

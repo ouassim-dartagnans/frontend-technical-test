@@ -14,8 +14,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Flex direction={'column'} minW={'100vw'} minH={'100vh'} justify={'center'}>
       <Flex
-        p={[5, '1.8rem 5%']}
-        h={[20, 'fit-content']}
+        p={[5, '1.5rem 2rem']}
+        h={'fit-content'}
+        maxH={[20, '10vh']}
         w={'100%'}
         borderTop={'1px solid #eaeaea'}
         borderBottom={'3px solid'}
@@ -33,7 +34,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <Flex as={'main'} direction={'column'} justify={'center'} alignItems={'center'} grow={1}>
         {children}
       </Flex>
-      <Center w={'100%'} height={'50px'} borderTop={'1px solid'} borderTopColor={'brand.dark'}>
+      <Center w={'100%'} height={'min(50px, 10vh)'} borderTop={'1px solid'} borderTopColor={'brand.dark'}>
         &copy; leboncoin - {year}
       </Center>
     </Flex>

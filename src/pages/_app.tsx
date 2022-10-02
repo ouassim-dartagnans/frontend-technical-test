@@ -1,11 +1,16 @@
-import type { AppProps } from 'next/app';
-import { getLoggedUserId } from '../utils/getLoggedUserId';
-import '../styles/globals.css';
 import { useState } from 'react';
+
+import type { AppProps } from 'next/app';
+
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Layout } from '../components';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import { ChakraProvider } from '@chakra-ui/react';
+
+import { getLoggedUserId } from '../utils/getLoggedUserId';
+
+import { Layout } from '../components';
+import '../styles/globals.css';
 import theme from '../theme';
 
 // Default way to get a logged user

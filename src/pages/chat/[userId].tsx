@@ -71,7 +71,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ),
   ]);
 
-  // if () return {props: {}, redirect: {destination: `\\`}}
   return { props: { userId: userIdAsNumber, dehydratedState: dehydrate(queryClient) } };
 };
 

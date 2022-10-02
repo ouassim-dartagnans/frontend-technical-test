@@ -25,13 +25,13 @@ export const ViewConversation = ({ conversation, interlocutor, handleClose }: Pr
 
   return (
     <Flex
-      direction={'column'}
-      w={'100%'}
-      flexGrow={1}
-      mt={'auto'}
-      overflow={'scroll'}
-      maxH={'80vh'}
       px={5}
+      w={'100%'}
+      mt={'auto'}
+      flexGrow={1}
+      maxH={'80vh'}
+      overflow={'scroll'}
+      direction={'column'}
       position={'relative'}
     >
       <Flex direction={'column'} w={'100%'} flexGrow={1} gap={10} position={'relative'}>
@@ -52,16 +52,20 @@ export const ViewConversation = ({ conversation, interlocutor, handleClose }: Pr
           </Hide>
         </Center>
         <List>
-          {messages
-            .sort((a, b) => a.timestamp - b.timestamp)
-            .map((message) => (
-              <ViewMessage key={`message_${message.id}`} message={message} interlocutor={interlocutor} />
-            ))}
+          {!!messages ? (
+            messages
+              .sort((a, b) => a.timestamp - b.timestamp)
+              .map((message) => (
+                <ViewMessage key={`message_${message.id}`} message={message} interlocutor={interlocutor} />
+              ))
+          ) : (
+            <Flex grow={1} />
+          )}
           <div ref={ref} />
         </List>
       </Flex>
       <Box position={'sticky'} bottom={0} bgColor={'white'}>
-        <MessageInput key={`${messages.length}`} conversation={conversation} />
+        <MessageInput key={messages?.length} conversation={conversation} />
       </Box>
     </Flex>
   );

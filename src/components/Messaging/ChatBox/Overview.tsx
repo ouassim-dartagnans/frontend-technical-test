@@ -17,11 +17,9 @@ import {
   Tabs,
 } from '@chakra-ui/react';
 
-import { Conversation } from '../../../types/conversation';
-import { Message } from '../../../types/message';
-import { User } from '../../../types/user';
+import { Conversation, Message, User } from '../../../types';
 
-import { ViewConversation } from '../Chat/ViewConversation';
+import { ViewConversation } from '../Chat';
 import { FriendsList } from './FriendsList';
 import { Summary } from './Summary';
 
@@ -51,13 +49,9 @@ export const Overview = ({
       ? { id: recipientId, nickname: recipientNickname }
       : { id: senderId, nickname: senderNickname };
 
-  function onSelectConversation(conv: Conversation | null) {
+  const onSelectConversation = (conv: Conversation | null) => {
     setSelectedConversation(conv);
-  }
-
-  function openConversationWithUser(userId: User['id']) {
-    console.log("create conv if it' not created already ");
-  }
+  };
 
   return (
     <Flex
@@ -104,8 +98,8 @@ export const Overview = ({
           </TabPanel>
           <TabPanel>
             <FriendsList
+              onSelectConversation={onSelectConversation}
               users={users.filter((usr) => usr.id !== user.id)}
-              openConversationWithUser={openConversationWithUser}
             />
           </TabPanel>
         </TabPanels>

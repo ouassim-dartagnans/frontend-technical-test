@@ -15,12 +15,14 @@ export const deleteConversationByConversationId = async (conversationId: Convers
   const { data } = await axios.delete(`${apiRoute}/conversation/${conversationId}`);
 };
 
-export const createConversationByUserId = async ({
-  recipientId,
-  conversationId,
-}: {
-  recipientId: User['id'];
-  conversationId: Conversation['id'];
-}) => {
-  await axios.post(`${apiRoute}/conversations/${conversationId}`, { recipientId });
+export const createConversation = async ({ recipient, sender }: { recipient: User; sender: User }) => {
+  const { data } = await axios.post(`${apiRoute}/conversations/${sender.id}`, {
+    recipientId: recipient.id,
+    recipientNickname: recipient.nickname,
+    senderId: sender.id,
+    senderNickname: sender.nickname,
+    lastMessageTimestamp: Math.floor(Date.now() / 1000),
+  });
+  console.log({ data });
+  return data as Conversation;
 };

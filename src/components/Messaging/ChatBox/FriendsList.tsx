@@ -1,17 +1,42 @@
 import React from 'react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { ChatIcon } from '@chakra-ui/icons';
 import { Avatar, Divider, Flex, IconButton, List, ListItem, Text } from '@chakra-ui/react';
 
-import { User } from '../../../types';
+import { Conversation, User } from '../../../types';
+
+import {
+  createConversation,
+  queryKeys,
+  useFetchConversationsForCurrentUser,
+  useFetchCurrentLoggedUser,
+} from '../../../api';
+import { loggedUserId } from '../../../pages/_app';
 
 export const FriendsList = ({
   users,
-  openConversationWithUser,
+  onSelectConversation,
 }: {
   users: Array<User>;
-  openConversationWithUser: (userId: User['id']) => void;
+  onSelectConversation: (conversation: Conversation | null) => void;
 }) => {
+  const queryClient = useQueryClient();
+
+  const { data: loggedUser } = useFetchCurrentLoggedUser();
+  const { data: conversations } = useFetchConversationsForCurrentUser();
+
+  const mutation = useMutation(
+    ({ sender, recipient }: { sender: User; recipient: User }) => createConversation({ sender, recipient }),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(queryKeys.conversations.userId(loggedUserId));
+        onSelectConversation(data);
+      },
+    }
+  );
+
   return (
     <List p={6}>
       <Flex direction={'column'} overflow={'scroll'} maxHeight={'80vh'} gap={5}>
@@ -24,7 +49,13 @@ export const FriendsList = ({
                 ml={'auto'}
                 icon={<ChatIcon />}
                 aria-label={'Send a message'}
-                onClick={() => openConversationWithUser(current.id)}
+                onClick={() => {
+                  let conversation = conversations.find(({ recipientId, senderId }) =>
+                    [senderId, recipientId].includes(current.id)
+                  );
+                  if (conversation) return onSelectConversation(conversation);
+                  return mutation.mutate({ sender: loggedUser, recipient: current });
+                }}
               />
             </Flex>
             <Divider />

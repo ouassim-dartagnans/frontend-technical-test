@@ -6,18 +6,17 @@ import Head from 'next/head';
 
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
-import {
-  useFetchConversationsByUserId,
-  useFetchMessagesByConversationsIds,
-  useFetchUserByUserId,
-  useFetchUsers,
-} from '../../api/hooks/fetchs';
 import { config } from '../../utils/config';
 
-import { Conversation } from '../../types/conversation';
-import { Message } from '../../types/message';
+import { Conversation, Message } from '../../types';
 
-import { queryKeys } from '../../api/keys';
+import {
+  queryKeys,
+  useFetchConversationsByUserId,
+  useFetchCurrentLoggedUser,
+  useFetchMessagesByConversationsIds,
+  useFetchUsers,
+} from '../../api';
 import { Overview } from '../../components';
 import { loggedUserId } from '../_app';
 
@@ -49,9 +48,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const ChatPage: FC = () => {
-  const { data: user } = useFetchUserByUserId(loggedUserId);
+  const { data: loggedUser } = useFetchCurrentLoggedUser();
   const { data: users } = useFetchUsers();
-  const { data: conversations } = useFetchConversationsByUserId({userId: loggedUserId});
+  const { data: conversations } = useFetchConversationsByUserId({ userId: loggedUserId });
   const messages = useFetchMessagesByConversationsIds(conversations?.map(({ id }) => id)).reduce(
     (map, query, currentIndex) => map.set(conversations[currentIndex].id, query.data),
     new Map<Conversation['id'], Array<Message>>()
@@ -62,7 +61,7 @@ const ChatPage: FC = () => {
         <title>Demo Chatbox - Leboncoin</title>
         <meta name="description" content="Chat fonctionnel, chat qui ira loin"></meta>
       </Head>
-      <Overview conversations={conversations} messages={messages} users={users} user={user} />
+      <Overview conversations={conversations} messages={messages} users={users} user={loggedUser} />
     </>
   );
 };

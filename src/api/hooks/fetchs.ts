@@ -4,10 +4,16 @@ import { fetchConversationsByUserId, fetchMessagesByConversationId, fetchUserByU
 
 import { Conversation, User } from '../../types';
 
+import { loggedUserId } from '../../pages/_app';
 import { queryKeys } from '../keys';
 
 export function useFetchUsers() {
   return useQuery(queryKeys.users._def, () => fetchUsers());
+}
+
+export function useFetchCurrentLoggedUser() {
+  const currentUserId = loggedUserId;
+  return useQuery(queryKeys.users.userId(currentUserId), () => fetchUserByUserId(currentUserId));
 }
 
 export function useFetchUserByUserId(userId: User['id']) {
@@ -16,6 +22,11 @@ export function useFetchUserByUserId(userId: User['id']) {
 
 export function useFetchConversationsByUserId({ userId, enabled }: { userId: User['id']; enabled?: boolean }) {
   return useQuery(queryKeys.conversations.userId(userId), () => fetchConversationsByUserId(userId), { enabled });
+}
+
+export function useFetchConversationsForCurrentUser() {
+  const currentUserId = loggedUserId;
+  return useQuery(queryKeys.conversations.userId(loggedUserId), () => fetchConversationsByUserId(currentUserId));
 }
 
 export function useFetchMessagesByConversationId(conversationId: Conversation['id']) {

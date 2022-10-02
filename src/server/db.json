@@ -23,6 +23,14 @@
       "senderId": 4,
       "senderNickname": "Elodie",
       "lastMessageTimestamp": 1625648667
+    },
+    {
+      "id": 4,
+      "recipientId": 7,
+      "recipientNickname": "Florianne",
+      "senderId": 1,
+      "senderNickname": "Thibaut",
+      "lastMessageTimestamp": 1664746959
     }
   ],
   "messages": [
@@ -241,6 +249,13 @@
       "conversationId": 1,
       "timestamp": 1664731077,
       "id": 31
+    },
+    {
+      "body": "Test De création de conversation",
+      "authorId": 1,
+      "conversationId": 4,
+      "timestamp": 1664746971,
+      "id": 32
     }
   ],
   "users": [

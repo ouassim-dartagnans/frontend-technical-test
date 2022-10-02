@@ -1,57 +1,66 @@
 import type { FC } from 'react';
-import { useState } from 'react';
 
-import axios from 'axios';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useRouter } from 'next/router';
 
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
+import { Flex } from '@chakra-ui/react';
+
+import { defaultConversation } from '../../types';
+
 import {
-  useFetchConversationByConversationId,
+  fetchConversationsByUserId,
+  fetchMessagesByConversationId,
+  fetchUserByUserId,
+  queryKeys,
   useFetchConversationsByUserId,
-  useFetchMessagesByConversationId,
   useFetchUserByUserId,
-  useFetchUsers,
-} from '../../api/hooks/fetchs';
-
-import { defaultConversation } from '../../types/conversation';
-
-import { queryKeys } from '../../api/keys';
+} from '../../api';
 import { ViewConversation } from '../../components';
+import { loggedUserId } from '../_app';
+
+const ConversationPage: FC = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { data: currentUser } = useFetchUserByUserId(loggedUserId);
+  const { data: interlocutor } = useFetchUserByUserId(userId);
+
+  const { data: conversations } = useFetchConversationsByUserId({ userId: userId });
+  const currentConversation = conversations
+    ?.filter(
+      ({ recipientId, senderId }) =>
+        [recipientId, senderId].includes(currentUser.id) && [recipientId, senderId].includes(interlocutor.id)
+    )
+    .at(-1);
+  return (
+    <Flex>
+      <ViewConversation
+        conversation={currentConversation ?? defaultConversation}
+        interlocutor={{ ...interlocutor }}
+        handleClose={() => null}
+      />
+    </Flex>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const userId = context.query.userId;
+  if (typeof userId !== 'string') {
+    return { props: {} };
+  }
   const queryClient = new QueryClient();
-  // await queryClient.prefetchQuery(
-  //   queryKeys.conversations.(), context.query.userId],
-  //   async () => {
-  //     const { data } = await axios.get('http://localhost:3005/user/' + context.query.userId);
-  //     return data;
-  //   },
-  //   { staleTime: 50000 }
-  // );
+  const userIdAsNumber = parseInt(userId, 10);
+  const conversation = (await fetchConversationsByUserId(userIdAsNumber)).at(0);
+  await Promise.all([
+    await queryClient.prefetchQuery(queryKeys.conversations.userId(userIdAsNumber), () =>
+      fetchConversationsByUserId(userIdAsNumber)
+    ),
+    await queryClient.prefetchQuery(queryKeys.users.userId(userIdAsNumber), () => fetchUserByUserId(userIdAsNumber)),
+    await queryClient.prefetchQuery(queryKeys.users.userId(1), () => fetchUserByUserId(1)),
+    await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversation.id), () =>
+      fetchMessagesByConversationId(conversation.id)
+    ),
+  ]);
 
-  return { props: { dehydratedState: dehydrate(queryClient) } };
+  return { props: { userId: userIdAsNumber, dehydratedState: dehydrate(queryClient) } };
 };
 
-const ConversationsListPage: FC = ({ test: string }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const router = useRouter();
-  const { userId } = router.query;
-  const { data: user } = useFetchUserByUserId(1);
-  const { data: users } = useFetchUsers();
-  const { data: conversation } = useFetchConversationByConversationId(1);
-  const { data: messages } = useFetchMessagesByConversationId(1);
-  const interlocutor = users?.find(
-    ({ id }) => [conversation.recipientId, conversation.senderNickname].includes(id) && id !== user.id
-  );
-  const def = {};
-  return (
-    <ViewConversation
-      conversation={conversation ?? defaultConversation}
-      interlocutor={{ ...interlocutor }}
-      handleClose={() => null}
-    />
-  );
-};
-
-export default ConversationsListPage;
+export default ConversationPage;

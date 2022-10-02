@@ -1,9 +1,12 @@
 import React from 'react';
-import styles from '../styles/Home.module.css';
+
 import Image from 'next/image';
-import Logo from '../assets/lbc-logo.webp';
-import { Button, Center, Flex, Spacer, useColorMode } from '@chakra-ui/react';
+import Link from 'next/link';
+
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { Button, Center, Flex, Spacer, useColorMode } from '@chakra-ui/react';
+
+import Logo from '../assets/lbc-logo.webp';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const year = new Date().getFullYear();
@@ -19,7 +22,11 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         borderBottomColor={'brand.primary'}
         as={'header'}
       >
-        <Image src={Logo} alt="Leboncoin Frontend Team" width={140} height={40} layout="fixed" />
+        <Link href={'/'}>
+          <a>
+            <Image src={Logo} alt="Leboncoin Frontend Team" width={140} height={40} layout="fixed" />
+          </a>
+        </Link>
         <Spacer />
         <Button onClick={toggleColorMode}>{colorMode === 'light' ? <MoonIcon /> : <SunIcon />}</Button>
       </Flex>

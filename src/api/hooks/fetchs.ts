@@ -1,6 +1,6 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 
-import { fetchConversationByUserId, fetchMessagesByConversationId, fetchUserByUserId, fetchUsers } from '../services';
+import { fetchConversationsByUserId, fetchMessagesByConversationId, fetchUserByUserId, fetchUsers } from '../services';
 
 import { Conversation, User } from '../../types';
 
@@ -14,8 +14,8 @@ export function useFetchUserByUserId(userId: User['id']) {
   return useQuery(queryKeys.users.userId(userId), () => fetchUserByUserId(userId));
 }
 
-export function useFetchConversationsByUserId(userId: User['id']) {
-  return useQuery(queryKeys.conversations.userId(userId), () => fetchConversationByUserId(userId));
+export function useFetchConversationsByUserId({ userId, enabled }: { userId: User['id']; enabled?: boolean }) {
+  return useQuery(queryKeys.conversations.userId(userId), () => fetchConversationsByUserId(userId), { enabled });
 }
 
 export function useFetchMessagesByConversationId(conversationId: Conversation['id']) {

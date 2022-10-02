@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const ChatPage: FC = () => {
   const { data: user } = useFetchUserByUserId(loggedUserId);
   const { data: users } = useFetchUsers();
-  const { data: conversations } = useFetchConversationsByUserId(loggedUserId);
+  const { data: conversations } = useFetchConversationsByUserId({userId: loggedUserId});
   const messages = useFetchMessagesByConversationsIds(conversations?.map(({ id }) => id)).reduce(
     (map, query, currentIndex) => map.set(conversations[currentIndex].id, query.data),
     new Map<Conversation['id'], Array<Message>>()

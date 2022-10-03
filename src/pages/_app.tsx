@@ -10,6 +10,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { getLoggedUserId } from '../utils/getLoggedUserId';
 
 import { Layout } from '../components';
+import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/globals.css';
 import theme from '../theme';
 

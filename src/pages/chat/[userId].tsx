@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Error from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -21,14 +22,18 @@ import {
 import { ViewConversation } from '../../components';
 import { loggedUserId } from '../_app';
 
-const ConversationPage: FC = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ConversationPage: FC = ({ userId, errorCode }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
 
   const { data: currentUser } = useFetchUserByUserId(loggedUserId);
   const { data: interlocutor } = useFetchUserByUserId(userId);
 
   const { data: conversations } = useFetchConversationsByUserId({ userId: userId });
-  if (!currentUser || !interlocutor) return <>Error</>;
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />;
+  }
+  if (!currentUser || !interlocutor || currentUser.id === interlocutor.id) return <>Error</>;
   const currentConversation = conversations
     ?.filter(
       ({ recipientId, senderId }) =>
@@ -58,20 +63,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: {} };
   }
   const queryClient = new QueryClient();
-  const userIdAsNumber = parseInt(userId, 10);
-  const conversation = (await fetchConversationsByUserId(userIdAsNumber)).at(0);
-  await Promise.all([
-    await queryClient.prefetchQuery(queryKeys.conversations.userId(userIdAsNumber), () =>
-      fetchConversationsByUserId(userIdAsNumber)
-    ),
-    await queryClient.prefetchQuery(queryKeys.users.userId(userIdAsNumber), () => fetchUserByUserId(userIdAsNumber)),
-    await queryClient.prefetchQuery(queryKeys.users.userId(1), () => fetchUserByUserId(1)),
-    await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversation?.id), () =>
-      fetchMessagesByConversationId(conversation.id)
-    ),
-  ]);
-
-  return { props: { userId: userIdAsNumber, dehydratedState: dehydrate(queryClient) } };
+  try {
+    const userIdAsNumber = parseInt(userId, 10);
+    const conversation = (await fetchConversationsByUserId(userIdAsNumber)).at(0);
+    await Promise.all([
+      await queryClient.prefetchQuery(queryKeys.conversations.userId(userIdAsNumber), () =>
+        fetchConversationsByUserId(userIdAsNumber)
+      ),
+      await queryClient.prefetchQuery(queryKeys.users.userId(userIdAsNumber), () => fetchUserByUserId(userIdAsNumber)),
+      await queryClient.prefetchQuery(queryKeys.users.userId(1), () => fetchUserByUserId(1)),
+      await queryClient.prefetchQuery(queryKeys.messages.conversationId(conversation?.id), () =>
+        fetchMessagesByConversationId(conversation.id)
+      ),
+    ]);
+    return { props: { userId: userIdAsNumber, dehydratedState: dehydrate(queryClient) } };
+  } catch (e) {
+    console.log(e);
+    return { props: { errorCode: e.statusCode || true, error: e.message } };
+  }
 };
 
 export default ConversationPage;

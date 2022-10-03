@@ -10,6 +10,7 @@ const colors = {
     primary: '#ec6e24',
     secondary: '#ec9835',
     background: 'rgba(254,111,0,0.1)',
+    lightBackground: 'rgba(236,215,199,0.1)',
     black: '1e1100',
     white: 'e1e1e1',
     50: '#fff1df',
@@ -36,4 +37,3 @@ const breakpoints = {
 const theme = extendTheme({ colors, config, breakpoints });
 
 export default theme;
-

@@ -6,7 +6,7 @@ export const PossibleImprovements = () => {
     { id: 0, text: 'Typing of api return (Via zodios)' },
     { id: 1, text: 'Unit tests / end to end' },
     { id: 2, text: 'Auth' },
-    { id: 5, text: 'Errors handling' },
+    { id: 5, text: 'Better errors handling' },
     { id: 7, text: 'Use grid to organize chatbox display' },
     { id: 8, text: 'Add datestamp separator' },
     { id: 10, text: 'Custom hooks for derivating data' },
